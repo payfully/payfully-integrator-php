@@ -1,2 +1,2 @@
 # payfully-integrator-php
-payfully integrator php
+Payfully Integrator PHP
