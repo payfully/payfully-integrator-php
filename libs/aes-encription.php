@@ -22,8 +22,8 @@ class AES {
      * @param type $mode
      */
     function __construct($data = null, $key = null) {
-        $this->setData($data);
-        $this->setKey($key);
+        $this->data = $data;
+        $this->key = $key;
     }
     /**
      * 
@@ -47,17 +47,14 @@ class AES {
     public function encrypt()
     {
       if ($this->validateParams()) { 
-        $ivLength = openssl_cipher_iv_length($this->encryptMethod);
-        $iv = mb_substr($this->key, 0, $ivLength);
- 
+        $iv = mb_substr($this->key, 0, 16);
         $salt = openssl_random_pseudo_bytes(256);
-        $iterations = 999;
-        $hashKey = hash_pbkdf2('sha512', $this->key, $salt, $iterations, ($this->encryptMethodLength() / 4));
-        $encryptedString = openssl_encrypt($this->data, $this->encryptMethod, hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
-        $encryptedString = base64_encode($encryptedString);
+        $hashKey = hash_pbkdf2('sha512', $this->key, $salt, 999, 64);
+        $encryptedData = openssl_encrypt($this->data, $this->encryptMethod, hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
+        $encryptedData = base64_encode($encryptedData);
         unset($hashKey);
-        $output = ['ciphertext' => $encryptedString, 'iv' => bin2hex($iv), 'salt' => bin2hex($salt), 'iterations' => $iterations];
-        unset($encryptedString, $iterations, $iv, $ivLength, $salt);
+        $output = ['ciphertext' => $encryptedData, 'salt' => bin2hex($salt)];
+        unset($encryptedString, $iv, $salt);
         return base64_encode(json_encode($output));
       } else {
         throw new Exception('Invlid params!');

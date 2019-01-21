@@ -1,5 +1,19 @@
 {
+    "name": "payfully/integrator",
+    "description": "Generates payfully integration url",
+    "authors": [
+        {
+            "name": "Duvan Monsalve",
+            "email": "duvan@payfully.co"
+        }
+    ],
+    "minimum-stability": "dev",
     "require": {
         "giggsey/libphonenumber-for-php": "^8.10"
+    },
+    "autoload": {
+        "psr-0": {
+            "PayfullyIntegrator": "/"
+        }
     }
 }
