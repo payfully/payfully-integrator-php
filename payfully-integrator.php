@@ -31,22 +31,22 @@ class UrlGenerator implements UrlGeneratorInterface
   public function generate()
   {
     // $this->validate();
-    return $this->getDataEncoded();
-    // return self::PAYFULLY_URL . "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
+    // return $this->getDataEncoded();
+    return self::PAYFULLY_URL . "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
   }
   private function getDataEncoded() {
     $encodedData = [];
     $encodedData['user'] =  $this->user;
-    // if($this->application) {
-    //   $encodedData['application'] =  $this->application;
-    // }
-    // if($this->documents) {
-    //   $encodedData['documents'] =  $this->documents;
-    // }
+    if($this->application) {
+      $encodedData['application'] =  $this->application;
+    }
+    if($this->documents) {
+      $encodedData['documents'] =  $this->documents;
+    }
     $encodedData = json_encode($encodedData, true);
 
     $aesEncript = new AES($encodedData, $this->aesKey);
-    $dataEncoded = $aesEncript->encrypt($encodedData);
+    $dataEncoded = $aesEncript->encrypt();
     return  $dataEncoded;
   }
   public function validate()
