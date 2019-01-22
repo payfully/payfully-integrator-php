@@ -7,8 +7,8 @@
     + [Data Structure](#-data-structure)
     + [Credentials Explained](#credentials-explained)
     + [Generating Integration URLs](#generating-integration-urls)
-      - [Generate Integration URL with our PHP library](#-generate-integration-url-our-php-library)
-      - [Generate Integration URL with our POST API](#-generate-integration-url-with-our-post-api)
+      - [Generate Integration URL with our PHP library](#api-link-generation-php)
+      - [Generate Integration URL with our POST API](#generate-integration-url-with-our-post-api)
       - [Generate Integration URL Manually](#generate-integration-url-manually)
   * [Creating User Accounts](#creating-user-accounts)
     + [Required Data](#-required-data)
@@ -47,8 +47,10 @@ As following the Integration URL allows logging into Payfully account.
 ## Integration Links
 
 The Integration URL looks as follows:
+`Production`
 `https://www.payfully.co/integrations/[relativeUrl]/[encodedData]`
-
+`Stage`
+`https://stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
 - *relativeUrl* - is going to be provided by Payfully Admin.
 
 - *encodedData* - is a **JSON data** that is first **AES Encrypted** and then **base64 encoded**.
@@ -58,6 +60,7 @@ The exact [data structure](#data-structure) and [encryption/encoding](#api-link-
 
 The example of an Integration URL:
 `https://wwww.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
+`https://stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
 
 ### <a name="data-structure"></a> Data Structure
 
@@ -93,13 +96,13 @@ Please contact Payfully Administrator to get them.
 There are 3 ways to generate Integration URLs.
 In all cases you will need to have `relativeUrl` and `aesKey`.
 
-#### <a name="api-link-generation"></a> Generate Integration URL with our PHP library
+#### <a name="api-link-generation-php"></a> Generate Integration URL with our PHP library
 
 To generate the Integration URL using the PHP library:
 1. Add the library to composer.
-2. Form a PHP array containing the required [data](#data-structure)
-2. **AES Encrypt** the string using your aesKey
-3. **base64** encode the result
+2. Form PHP array containing the required [data](#data-structure)
+2. Instance the library object, and set the relativeUrl, aesKey and test values inside the constructor. 
+2. Set the Data to each section.
 4. Call the method `generate()`
 
 Here is an example:
@@ -110,7 +113,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $relativeUrl = 'SuperAgency';
 $aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
-$urlgenerator = new UrlGenerator($relativeUrl,$aesKey);
+$test = true;
+$urlgenerator = new UrlGenerator($relativeUrl, $aesKey, $test);
 $urlgenerator->setUser([...]);
 $urlgenerator->setApplication([...]);
 $urlgenerator->setDocuments([...]);
@@ -120,12 +124,19 @@ echo $urlgenerator->generate();
 
 The code above outputs:
 ```text
+Production 
+
 https://wwww.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
+
+Stage
+
+https://stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
+
 ```
 
 Tested with PHP v7.1
 
-#### Generate Integration URL with our POST API
+####<a name="generate-integration-url-with-our-post-api"></a> Generate Integration URL with our POST API
 
 We provide a POST API for easy Integration URL generation.
 
@@ -149,7 +160,7 @@ The example response body:
 {"url":"https://www.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMStyeERjb1FvMmEwdFhPblhJT2xQMnRyelVkUXFUTXZtVT0="}
 ```
 
-#### Generate Integration URL Manually
+#### <a name="api-link-generation-manually"></a>Generate Integration URL Manually
 
 To generate the Integration URL manually you need to:
 1. Form a PHP array containing the required [data](#data-structure)
@@ -166,7 +177,8 @@ function generateIntegrationURL($data, $relativeUrl, $aesKey)
 {
   $iv = mb_substr($aesKey, 0, 16);
   $salt = openssl_random_pseudo_bytes(256);
-  $hashKey = hash_pbkdf2('sha512', $aesKey, $salt, 999, 64);
+  $iterations = 999;
+  $hashKey = hash_pbkdf2('sha512', $aesKey, $salt, $iterations, 64);
   $dataJson = json_encode($data, true);
   $encryptedData = openssl_encrypt($dataJson, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
   $encryptedData = base64_encode($encryptedData);

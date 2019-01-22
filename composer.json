@@ -1,19 +1,26 @@
 {
     "name": "payfully/integrator",
     "description": "Generates payfully integration url",
+    "license": "MIT",
+    "keywords": [
+      "Payfully",
+      "Integrator",
+      "RealState"
+    ],
     "authors": [
         {
             "name": "Duvan Monsalve",
             "email": "duvan@payfully.co"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
+        "php": ">=5.4.0",
         "giggsey/libphonenumber-for-php": "^8.10"
     },
     "autoload": {
-        "psr-0": {
-            "Payfully\\Integrator\\": "src/"
+        "psr-4": {
+            "Payfully\\Integrator\\": "src"
         }
-    }
+    },
+    "minimum-stability": "stable"
 }

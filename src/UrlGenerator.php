@@ -1,89 +1,98 @@
-<?php 
+<?php
+
 namespace Payfully\Integrator;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use \Payfully\Integrator\AES;
-use \libphonenumber\PhoneNumberUtil;
+use Payfully\Integrator\AES;
+use libphonenumber\PhoneNumberUtil;
 
 class UrlGenerator
 {
-  private $relativeUrl; 
-  private $aesKey; 
-  public $user; 
-  public $application = false; 
-  public $documents = false; 
+    private $relativeUrl;
+    private $aesKey;
+    private $test;
+    public $user;
+    public $application = false;
+    public $documents = false;
 
-  const PAYFULLY_URL = 'https://www.payfully.co';
-  const PHONE_NUMBER_REGION = 'US';
-  /**
-   * @param type $relativeUrl
-   * @param type $aesKey
-   */
-  public function __construct($relativeUrl, $aesKey){
-    if(!$relativeUrl){
-      throw new Exception('RelativeUrl property must be provide.');
+    const PAYFULLY_URL_PROD = 'https://www.payfully.co';
+    const PAYFULLY_URL_STAGE = 'https://stage.payfully.co';
+    const PHONE_NUMBER_REGION = 'US';
+    /**
+     * @param type $relativeUrl
+     * @param type $aesKey
+     */
+    public function __construct($relativeUrl, $aesKey, $test = false)
+    {
+        if (!$relativeUrl) {
+            throw new Exception('RelativeUrl property must be provide.');
+        }
+        if (!$relativeUrl) {
+            throw new Exception('aesKey property must be provide.');
+        }
+        $this->relativeUrl = $relativeUrl;
+        $this->aesKey = $aesKey;
+        $this->test = $test;
     }
-    if(!$relativeUrl){
-      throw new Exception('aesKey property must be provide.');
+
+    /**
+     * @param user $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
-    $this->relativeUrl = $relativeUrl;
-    $this->aesKey = $aesKey;
-  }
 
-  /**
-   * @param user $user
-   */
-  public function setUser($user) {
-    $this->user = $user;
-  }
-
-  /**
-   * @param user $application
-   */
-  public function setApplication($application) {
-    $this->application = $application;
-  }
-
-  /**
-   * @param documents $documents
-   */
-  public function setDocuments($documents) {
-    $this->documents = $documents;
-  }
-
-  public function generate()
-  {
-    $this->validate();
-    return self::PAYFULLY_URL . "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
-  }
-
-  private function getDataEncoded() {
-    $encodedData = [];
-    $encodedData['user'] =  $this->user;
-    if($this->application) {
-      $encodedData['application'] =  $this->application;
+    /**
+     * @param user $application
+     */
+    public function setApplication($application)
+    {
+        $this->application = $application;
     }
-    if($this->documents) {
-      $encodedData['documents'] =  $this->documents;
+
+    /**
+     * @param documents $documents
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
     }
-    $encodedData = json_encode($encodedData, true);
 
-    $aesEncript = new AES($encodedData, $this->aesKey);
-    $dataEncoded = $aesEncript->encrypt();
-    return  $dataEncoded;
-  }
-  public function validate()
-  {
-    $this->validateUser();
-    $this->validateApplication();
-    $this->validateDocuments();
+    public function generate()
+    {
+        $this->validate();
+        return ($this->test ? self::PAYFULLY_URL_STAGE : self::PAYFULLY_URL_PROD). "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
+    }
 
-    return true;
-  }
-  public function validateUser()
-  {
-    $fields = [
+    private function getDataEncoded()
+    {
+        $encodedData = [];
+        $encodedData['user'] =  $this->user;
+        if ($this->application) {
+            $encodedData['application'] =  $this->application;
+        }
+        if ($this->documents) {
+            $encodedData['documents'] =  $this->documents;
+        }
+        $encodedData = json_encode($encodedData, true);
+
+        $aesEncript = new AES($encodedData, $this->aesKey);
+        $dataEncoded = $aesEncript->encrypt();
+        return  $dataEncoded;
+    }
+    public function validate()
+    {
+        $this->validateUser();
+        $this->validateApplication();
+        $this->validateDocuments();
+
+        return true;
+    }
+    public function validateUser()
+    {
+        $fields = [
       'email'=> [
         'required' => true,
         'type' => 'email'
@@ -98,29 +107,27 @@ class UrlGenerator
       ]
     ];
     
-    if(!$this->user || !is_array($this->user)) {
-      throw new Exception('User data must be an array');
-    }
+        if (!$this->user || !is_array($this->user)) {
+            throw new Exception('User data must be an array');
+        }
 
-    foreach($this->user as $key => $property){
+        foreach ($this->user as $key => $property) {
+            if (key_exists($key, $fields)) {
+                $this->validateType($fields[$key]['type'], $property, $key);
+            } else {
+                unset($this->user[$key]);
+            }
+        }
 
-      if(key_exists($key,$fields)) {
-        $this->validateType($fields[$key]['type'], $property, $key);
-      }
-      else {
-        unset($this->user[$key]);
-      }
+        foreach ($fields as $key => $field) {
+            if (!key_exists($key, $this->user)) {
+                throw new Exception("Property '$key' is a required field for User data.");
+            }
+        }
     }
-
-    foreach($fields as $key => $field) {
-      if(!key_exists($key,$this->user)) {
-          throw new Exception("Property '$key' is a required field for User data.");
-      }
-    }
-  }
-  public function validateApplication()
-  {
-    $fields = [
+    public function validateApplication()
+    {
+        $fields = [
       'dueDate'=> [
         'required' => false,
         'type' => 'date'
@@ -202,39 +209,35 @@ class UrlGenerator
         ]
       ]
     ];
-    if($this->application) {
-      if(!is_array($this->application)) {
-        throw new Exception('Application data must be an array');
-      }
-    foreach($this->application as $key => $property){
-
-      if(key_exists($key,$fields)) {
-        if($fields[$key]['type'] === 'array') {
-          if($property && !is_array($property)) {
-            throw new Exception("'$key' must be an array");
-          }
-          foreach($property as $keyInter => $propertyInter){
-            if(key_exists($keyInter,$fields[$key]['data'])) {
-              $this->validateType($fields[$key]['data'][$keyInter]['type'], $propertyInter,$keyInter );
+        if ($this->application) {
+            if (!is_array($this->application)) {
+                throw new Exception('Application data must be an array');
             }
-            else {
-              unset($this->application[$key][$keyInter]);
+            foreach ($this->application as $key => $property) {
+                if (key_exists($key, $fields)) {
+                    if ($fields[$key]['type'] === 'array') {
+                        if ($property && !is_array($property)) {
+                            throw new Exception("'$key' must be an array");
+                        }
+                        foreach ($property as $keyInter => $propertyInter) {
+                            if (key_exists($keyInter, $fields[$key]['data'])) {
+                                $this->validateType($fields[$key]['data'][$keyInter]['type'], $propertyInter, $keyInter);
+                            } else {
+                                unset($this->application[$key][$keyInter]);
+                            }
+                        }
+                    } else {
+                        $this->validateType($fields[$key]['type'], $property, $key);
+                    }
+                } else {
+                    unset($this->application[$key]);
+                }
             }
-          }
         }
-        else {
-          $this->validateType($fields[$key]['type'], $property, $key);
-        }
-      }
-      else {
-        unset($this->application[$key]);
-      }
     }
-  }
-  }
-  public function validateDocuments()
-  {
-    $fields = [
+    public function validateDocuments()
+    {
+        $fields = [
       'type'=> [
         'required' => true,
         'type' => 'document'
@@ -244,45 +247,45 @@ class UrlGenerator
         'type' => 'string'
       ]
     ];
-    if($this->documents) {
-      if(!is_array($this->documents)) {
-        throw new Exception('Documents data must be an array');
+        if ($this->documents) {
+            if (!is_array($this->documents)) {
+                throw new Exception('Documents data must be an array');
+            }
+            if (!$this->application) {
+                $this->setDocuments(false);
+            } else {
+                foreach ($this->documents as $key => $document) {
+                    $this->validateType($fields['type']['type'], $document['type'], $key);
+                    $this->validateType($fields['url']['type'], $document['url'], $key);
+                }
+            }
         }
-      if(!$this->application) {
-        $this->setDocuments(false);
-      }
-      else {
-        foreach($this->documents as $key => $document){
-            $this->validateType($fields['type']['type'], $document['type'], $key);
-            $this->validateType($fields['url']['type'], $document['url'], $key);
-        }
-      }
-  }
-  }
-  function validateType($type, $value, $field) {
-    switch($type){
-      case 'email': 
+    }
+    public function validateType($type, $value, $field)
+    {
+        switch ($type) {
+      case 'email':
         if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-          return true;
+            return true;
         } else {
             throw new Exception("'Value '$value' for '$field' is not a valid email address");
         }
       break;
-      case 'date': 
-        if($value) {
-        if (preg_match('/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/', $value) > 0) {
-          return true;
-        } else {
-          throw new Exception("Value '$value' for '$field' is not a valid date ISO 8601 formatted.");
+      case 'date':
+        if ($value) {
+            if (preg_match('/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/', $value) > 0) {
+                return true;
+            } else {
+                throw new Exception("Value '$value' for '$field' is not a valid date ISO 8601 formatted.");
+            }
         }
-      }
       break;
-      case 'boolean': 
+      case 'boolean':
         if (!is_bool($value)) {
             throw new   Exception("Value '$value' for '$field' is not a valid boolean.");
         }
       break;
-      case 'phone': 
+      case 'phone':
         $phoneUtil = PhoneNumberUtil::getInstance();
         try {
             $swissNumberProto = $phoneUtil->parse($value, self::PHONE_NUMBER_REGION);
@@ -290,16 +293,16 @@ class UrlGenerator
             throw new Exception("Error parsing the phone number");
         }
         $isValid = $phoneUtil->isValidNumber($swissNumberProto);
-        if(!$isValid) {
-          throw new Exception("Value '$value' for '$field' is not a valid phone number");
+        if (!$isValid) {
+            throw new Exception("Value '$value' for '$field' is not a valid phone number");
         }
       break;
-      case 'numeric': 
-        if(!is_numeric($value)) {
-          throw new Exception("Value '$value' for '$field' is not numeric");
+      case 'numeric':
+        if (!is_numeric($value)) {
+            throw new Exception("Value '$value' for '$field' is not numeric");
         }
       break;
-      case 'document': 
+      case 'document':
 
       $docTypes = [
         "idDocuments",
@@ -311,14 +314,14 @@ class UrlGenerator
         "inspection_report",
         "bank_approval"
       ];
-        if(!in_array($value, $docTypes)) {
-          throw new Exception("Document type value '$value' for 'document[$field]' is not valid");
+        if (!in_array($value, $docTypes)) {
+            throw new Exception("Document type value '$value' for 'document[$field]' is not valid");
         }
       break;
-      default : 
+      default:
         return true;
       break;
 
     }
-  }
+    }
 }

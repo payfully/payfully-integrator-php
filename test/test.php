@@ -1,12 +1,11 @@
 
-<?php 
+<?php
 
 require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
 
-use \Payfully\Integrator\UrlGenerator;
+use Payfully\Integrator\UrlGenerator;
 
-
-$urlgenerator = new UrlGenerator("payfully_test",'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==');
+$urlgenerator = new UrlGenerator("payfully_test", 'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==', true);
 $urlgenerator->setUser([
     'email'=> 'test@test.com',
     'fullName'=> 'test@test.com',
