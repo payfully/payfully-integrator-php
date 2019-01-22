@@ -7,6 +7,7 @@
     + [Data Structure](#-data-structure)
     + [Credentials Explained](#credentials-explained)
     + [Generating Integration URLs](#generating-integration-urls)
+      - [Generate Integration URL with our PHP library](#-generate-integration-url-our-php-library)
       - [Generate Integration URL with our POST API](#-generate-integration-url-with-our-post-api)
       - [Generate Integration URL Manually](#generate-integration-url-manually)
   * [Creating User Accounts](#creating-user-accounts)
@@ -95,7 +96,7 @@ In all cases you will need to have `relativeUrl` and `aesKey`.
 #### <a name="api-link-generation"></a> Generate Integration URL with our PHP library
 
 To generate the Integration URL using the PHP library:
-1. Add your library to composer.
+1. Add the library to composer.
 2. Form a PHP array containing the required [data](#data-structure)
 2. **AES Encrypt** the string using your aesKey
 3. **base64** encode the result

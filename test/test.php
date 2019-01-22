@@ -1,11 +1,15 @@
 
 <?php 
-require __DIR__ ."/../payfully-integrator.php";
+
+require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
+
+use \Payfully\Integrator\UrlGenerator;
+
 
 $urlgenerator = new UrlGenerator("payfully_test",'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==');
 $urlgenerator->setUser([
-    'email'=> 'usuario@asdsd.com',
-    'fullName'=> 'usuario@asdsd.com',
+    'email'=> 'test@test.com',
+    'fullName'=> 'test@test.com',
     'phone'=> '6466666666'
 ]);
 $datetime = new DateTime('2010-12-30 23:21:46');
@@ -14,14 +18,14 @@ $urlgenerator->setApplication([
   'dueDate'=> $datetime,
   'shareOfCommission'=> 123,
   'dealInformation'=> [
-    'propertyAddress'=> 'asdte',
+    'propertyAddress'=> 'test',
     'remove'=> 'remove',
-    'propertyType'=> 'asdte',
+    'propertyType'=> 'test',
     'isNewConstruction'=> false,
     'isShortSale'=> true,
     'ratificationDate'=> $datetime,
     'closingDate'=> $datetime,
-    'mlsId'=> 'asdte'
+    'mlsId'=> 'test'
   ],
   'agentInformation'=> [
     'represents'=> '123',
@@ -29,9 +33,9 @@ $urlgenerator->setApplication([
     'pendingContracts'=> 123,
     'activeListings'=> 3455,
     'fullName'=> 'adte',
-    'email'=> 'dasdasd@dasd.sdd',
+    'email'=> 'test@test.com',
     'phoneNumber'=> '6466666666',
-    'licenseNumber'=> 'asdte'
+    'licenseNumber'=> 'test'
   ]
 ]);
 

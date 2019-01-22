@@ -1,6 +1,9 @@
 <?php 
-require __DIR__ . '/vendor/autoload.php';
-require "libs/aes-encription.php";
+namespace Payfully\Integrator;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use \Payfully\Integrator\AES;
 use \libphonenumber\PhoneNumberUtil;
 
 class UrlGenerator

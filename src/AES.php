@@ -1,5 +1,7 @@
 <?php 
 
+namespace Payfully\Integrator;
+
 class AES {
    
         /**
