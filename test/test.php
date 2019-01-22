@@ -4,8 +4,9 @@
 require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
 
 use Payfully\Integrator\UrlGenerator;
+use Payfully\Integrator\Env;
 
-$urlgenerator = new UrlGenerator("payfully_test", 'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==', true);
+$urlgenerator = new UrlGenerator("payfully_test", 'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==', Env::Production);
 $urlgenerator->setUser([
     'email'=> 'test@duvan.com',
     'fullName'=> 'test@duvan.com',

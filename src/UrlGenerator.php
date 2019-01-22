@@ -3,6 +3,7 @@
 namespace Payfully\Integrator;
 
 use Payfully\Integrator\AES;
+use Payfully\Integrator\Env;
 use libphonenumber\PhoneNumberUtil;
 use Exception;
 
@@ -10,7 +11,7 @@ class UrlGenerator
 {
     private $relativeUrl;
     private $aesKey;
-    private $test;
+    private $env;
     public $user;
     public $application = false;
     public $documents = false;
@@ -22,7 +23,7 @@ class UrlGenerator
      * @param type $relativeUrl
      * @param type $aesKey
      */
-    public function __construct($relativeUrl, $aesKey, $test = false)
+    public function __construct($relativeUrl, $aesKey, $env = Env::Production)
     {
         if (!$relativeUrl) {
             throw new Exception('RelativeUrl property must be provide.');
@@ -32,7 +33,7 @@ class UrlGenerator
         }
         $this->relativeUrl = $relativeUrl;
         $this->aesKey = $aesKey;
-        $this->test = $test;
+        $this->env = $env;
     }
 
     /**
@@ -62,7 +63,7 @@ class UrlGenerator
     public function generate()
     {
         $this->validate();
-        return ($this->test ? self::PAYFULLY_URL_STAGE : self::PAYFULLY_URL_PROD). "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
+        return ($this->env === Env::Production ? self::PAYFULLY_URL_PROD : self::PAYFULLY_URL_STAGE). "/integrations/".$this->relativeUrl."/".$this->getDataEncoded();
     }
 
     private function getDataEncoded()

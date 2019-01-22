@@ -1,6 +1,6 @@
 <?php
 
-namespace Payfully\Integrator;
+    namespace Payfully\Integrator;
 
 class AES
 {

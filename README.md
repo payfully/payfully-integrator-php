@@ -26,11 +26,9 @@ If you have any questions please don't hesitate to [contact us](alberto@payfully
 
 ### Supported Features Overview
 
-Currently we offer 2 main features:
-- Quick User Registration & Log In
-- Submitting Advance Applications Automatically
+We provide a main feature for generate a url that will create the user and created a draft application with the information provided. 
 
-Both of the features work the following way:
+The flow will follow thi:
 1. You need to obtain the credentials: relativeUrl and aesKey.
 2. Gather the required data (in a JSON format)
 3. Generate a special URL (referred as IntegrationURL) and place it at your website.
@@ -46,11 +44,16 @@ As following the Integration URL allows logging into Payfully account.
 
 ## Integration Links
 
-The Integration URL looks as follows:
-`Production`
+The Integration URL 
+
+Production
+
 `https://integration.payfully.co/integrations/[relativeUrl]/[encodedData]`
-`Stage`
+
+Stage
+
 `https://integration-stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
+
 - *relativeUrl* - is going to be provided by Payfully Admin.
 
 - *encodedData* - is a **JSON data** that is first **AES Encrypted** and then **base64 encoded**.
@@ -59,7 +62,13 @@ This data should contain agent information + optionally data for the Advance App
 The exact [data structure](#data-structure) and [encryption/encoding](#api-link-generation) are covered in the following sections.
 
 The example of an Integration URL:
+
+Production 
+
 `https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
+
+Stage 
+
 `https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
 
 ### <a name="data-structure"></a> Data Structure
@@ -118,11 +127,12 @@ Here is an example:
 require __DIR__ . '/vendor/autoload.php';
 
 use Payfully\Integrator\UrlGenerator;
+use Payfully\Integrator\Env;
 
 $relativeUrl = 'SuperAgency';
 $aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
 $test = true;
-$urlgenerator = new UrlGenerator($relativeUrl, $aesKey, $test);
+$urlgenerator = new UrlGenerator($relativeUrl, $aesKey, Env::Stage);
 $urlgenerator->setUser([...]);
 $urlgenerator->setApplication([...]);
 $urlgenerator->setDocuments([...]);
@@ -132,7 +142,7 @@ echo $urlgenerator->generate();
 
 The code above outputs:
 
-Production 
+If you provide `Env::Production` you will get the production url.
 
 ```text
 
@@ -140,7 +150,7 @@ https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ
 
 ```
 
-Stage
+If you provide `Env::Stage` you will get the stage url.
 
 ```text
 
