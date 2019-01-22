@@ -2,10 +2,9 @@
 
 namespace Payfully\Integrator;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Payfully\Integrator\AES;
 use libphonenumber\PhoneNumberUtil;
+use Exception;
 
 class UrlGenerator
 {

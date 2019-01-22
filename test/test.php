@@ -7,8 +7,8 @@ use Payfully\Integrator\UrlGenerator;
 
 $urlgenerator = new UrlGenerator("payfully_test", 'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==', true);
 $urlgenerator->setUser([
-    'email'=> 'test@test.com',
-    'fullName'=> 'test@test.com',
+    'email'=> 'test@duvan.com',
+    'fullName'=> 'test@duvan.com',
     'phone'=> '6466666666'
 ]);
 $datetime = new DateTime('2010-12-30 23:21:46');

@@ -66,12 +66,12 @@ The example of an Integration URL:
 
 JSON data encoded in IntegrationURL should have the following structure:
 
-```
-{
-  "user": { ... } (required) Agent information. Used to log in and create account if needed.
-  "application": { ... } (optional) Advance Application info. Used to create an Advance Application if present.
-  "documents": { ... } (optional) Used to upload the documents for Advance Application if present.
-}
+```php
+[
+  "user" => [ ... ] // (required) Agent information. Used to log in and create account if needed.
+  "application" => [ ... ] // (optional) Advance Application info. Used to create an Advance Application if present.
+  "documents" => [ ... ]  // (optional) Used to upload the documents for Advance Application if present.
+]
 ```
 
 Please refer to the specific sections to get more detail: 
@@ -105,11 +105,19 @@ To generate the Integration URL using the PHP library:
 2. Set the Data to each section.
 4. Call the method `generate()`
 
+Add the Payfully library to your composer file.
+
+```
+composer require payfully/integrator
+```
+
 Here is an example:
 
 ```php
 
 require __DIR__ . '/vendor/autoload.php';
+
+use Payfully\Integrator\UrlGenerator;
 
 $relativeUrl = 'SuperAgency';
 $aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
@@ -123,12 +131,18 @@ echo $urlgenerator->generate();
 ```
 
 The code above outputs:
-```text
+
 Production 
+
+```text
 
 https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 
+```
+
 Stage
+
+```text
 
 https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 
@@ -217,12 +231,12 @@ Tested with PHP v7.1
 
 Each Integration URL must contain the user information.
 
-```
+```php
 [
   "user" => [
-     "email"=> "...", (required) [string] Agent email
-     "fullName" => "...", (required) [string] Agent full name
-     "phone" => "..." (required) [string] Agent phone number; Must be a valid US phone number; Format: '+19179246228'
+     "email"=> "...", // (required) [string] Agent email
+     "fullName" => "...", // (required) [string] Agent full name
+     "phone" => "..." // (required) [string] Agent phone number; Must be a valid US phone number; Format: '+19179246228'
   ]
 ]
 ```
@@ -249,28 +263,28 @@ Any optional data that was not provided by Integration URL can be filled later m
 ### <a name="aa-required-data"></a> Required Data
 The following data structure is expected:
 
-```
+```php
 [
-  'dueDate' => "...", (optional) [string] ISO 8601 Date String
-  'shareOfCommission' => ..., (optional) [number]
+  'dueDate' => "...",// (optional) [string] ISO 8601 Date String
+  'shareOfCommission' => ..., // (optional) [number]
   'dealInformation' => [
-    'propertyAddress' => "...", (optional) [string] address string
-    'propertyType' => "...", (optional) [string] 
-    'isNewConstruction' => true/false, (optional) [boolean]
-    'isShortSale' => true/false, (optional) [boolean]
-    'ratificationDate' => "...", (optional) [string] ISO 8601 Date String
-    'closingDate' => "...", (optional) [string] ISO 8601 Date String
-    'mlsId' => "..." (optional) [string]
+    'propertyAddress' => "...", // (optional) [string] address string
+    'propertyType' => "...", // (optional) [string] 
+    'isNewConstruction' => true/false, // (optional) [boolean]
+    'isShortSale' => true/false, // (optional) [boolean]
+    'ratificationDate' => "...", // (optional) [string] ISO 8601 Date String
+    'closingDate' => "...", // (optional) [string] ISO 8601 Date String
+    'mlsId' => "..." // (optional) [string]
   ],
   'agentInformation' => [
-    'represents' => "...", (optional) [string]
-    'completedTransactions' => ..., (optional) [number]
-    'pendingContracts' => ..., (optional) [number]
-    'activeListings' => ..., (optional) [number]
-    'fullName' => "...", (optional) [string]
-    'email' => "...", (optional) [string] Must be a valid email
-    'phoneNumber' => "...", (optional) [string] Must be a valid US phone number; Format: '+19179246228'
-    'licenseNumber' => "..." (optional) [string]
+    'represents' => "...", // (optional) [string]
+    'completedTransactions' => ..., // (optional) [number]
+    'pendingContracts' => ..., // (optional) [number]
+    'activeListings' => ..., // (optional) [number]
+    'fullName' => "...", // (optional) [string]
+    'email' => "...", // (optional) [string] Must be a valid email
+    'phoneNumber' => "...", // (optional) [string] Must be a valid US phone number; Format: '+19179246228'
+    'licenseNumber' => "..." // (optional) [string]
   ]
 ]
 ```
@@ -291,14 +305,14 @@ The `documents` property on Integration URLs data allows attaching documents to 
 If `documents` is present, then the `application` property becomes required.
 
 The expected data format is:
-```
+```php
 [
   "user" => [ ... ],
-  "application" => [ ... ], (required in this case),
+  "application" => [ ... ], // (required in this case),
   "documents" => [
     [
-      "type" => "..." (required) [string] Document type. Please find the list of available document types below.
-      "url" => "..." (required) [string] A URL for a direct document download. HTTP GET is used to fetch the document.
+      "type" => "..." // (required) [string] Document type. Please find the list of available document types below.
+      "url" => "..." // (required) [string] A URL for a direct document download. HTTP GET is used to fetch the document.
     ],
     [ ... ]
   ]
