@@ -47,8 +47,10 @@ As following the Integration URL allows logging into Payfully account.
 ## Integration Links
 
 The Integration URL looks as follows:
+
 `Production`
 `https://integration.payfully.co/integrations/[relativeUrl]/[encodedData]`
+
 `Stage`
 `https://integration-stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
 - *relativeUrl* - is going to be provided by Payfully Admin.
