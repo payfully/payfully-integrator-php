@@ -2,7 +2,7 @@
 
 - [Payfully Integration Guide](#payfully-integration-guide)
   * [Introduction](#introduction)
-    + [Supported Features Overview](#supported-features-overview)
+    + [How it works](#how-it-works)
   * [Integration Links](#integration-links)
     + [Data Structure](#-data-structure)
     + [Credentials Explained](#credentials-explained)
@@ -18,24 +18,30 @@
 
 ## Introduction
 
-Welcome! We greatly appreciate your interest in [Payfully](https://www.payfully.co/) platform!
+Welcome! We greatly appreciate your interest in the [Payfully](https://www.payfully.co/) platform!
 
 In this guide we are going to walk you through our integration features.
 
 If you have any questions please don't hesitate to [contact us](alberto@payfully.co).
 
-### Supported Features Overview
+### How it works
 
-We provide a main feature for generate a url that will create the user and created a draft application with the information provided. 
+We provide url generator that will create an advance application with the information provided. If the user does not exist in our platform, we will automatically create it.
 
-The flow will follow thi:
-1. You need to obtain the credentials: relativeUrl and aesKey.
-2. Gather the required data (in a JSON format)
-3. Generate a special URL (referred as IntegrationURL) and place it at your website.
-4. User which is logged into your website clicks the link and gets redirected to Payfully.
-5. Once the user follows the link he/she is redirected to our website.
-Then we automatically log the agent into Payfully (and create Payfully account if needed).
-We can also generate the Advance Application at the same time.
+We have two (2) environments:
+- Production: Live environment
+- Staging: Testing environment
+
+We'll provide the testing environment keys for you, and when the integration is ready we will send the production ones.
+
+**Instructions:**
+1. You need to obtain the specific environment credentials: `relativeUrl` and `aesKey`.
+2. Gather the required information (user, application, and documents).
+3. Add each component to the `$urlGenerator`.
+4. Generate a special URL (referred as IntegrationURL).
+5. Place them on your platform, so that agents can click on them.
+
+When the Agent (user) which is logged into your platform clicks on the link, they get redirected to Payfully, we automatically log the agent in (and create an account if needed). Finally, the Advance Application is also generated at the same time automatically. The agent will only need to fill out the information that was not provided via the link generator.
 
 **Important:**
 Integration URLs should be considered as sensitive information and
