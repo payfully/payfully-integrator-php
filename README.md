@@ -12,11 +12,9 @@
 
 ## Introduction
 
-Welcome! We greatly appreciate your interest in the [Payfully](https://www.payfully.co/) platform!
+Welcome! We greatly appreciate your interest in the [Payfully](https://www.payfully.co/) platform! In this guide we are going to walk you through our integration features.  
 
-In this guide we are going to walk you through our integration features.
-
-If you have any questions please don't hesitate to [contact us](alberto@payfully.co).
+If you have any questions please don't hesitate to [contact us](alberto@payfully.co).  
 
 ### <a name="how-it-works"></a> How it works
 
