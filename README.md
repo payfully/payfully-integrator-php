@@ -24,11 +24,11 @@ In this guide we are going to walk you through our integration features.
 
 If you have any questions please don't hesitate to [contact us](alberto@payfully.co).
 
-### How it works
+### <a name="how-it-works"></a> How it works
 
 We provide url generator that will create an advance application with the information provided. If the user does not exist in our platform, we will automatically create it.
 
-We have two (2) environments:
+**Payfully has two (2) environments:**
 - Production: Live environment
 - Staging: Testing environment
 
@@ -48,45 +48,27 @@ Integration URLs should be considered as sensitive information and
 should not be exposed to anyone except the users (which they are generated for).
 As following the Integration URL allows logging into Payfully account.
 
-## Integration Links
+## <a name="integration-links"></a> Integration Links
 
-The Integration URL 
+The generated Integration URL looks like:
 
-Production
+`https://<environment>.payfully.co/integrations/[relativeUrl]/[encodedData]`
 
-`https://integration.payfully.co/integrations/[relativeUrl]/[encodedData]`
+- *relativeUrl*: Is the one provided by us for your specific Environment.
+- *encodedData*: Is the **JSON data** that is first **AES Encrypted** and then **Base64 encoded**.
 
-Stage
-
-`https://integration-stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
-
-- *relativeUrl* - is going to be provided by Payfully Admin.
-
-- *encodedData* - is a **JSON data** that is first **AES Encrypted** and then **base64 encoded**.
-This data should contain agent information + optionally data for the Advance Application.
-
-The exact [data structure](#data-structure) and [encryption/encoding](#api-link-generation) are covered in the following sections.
-
-The example of an Integration URL:
-
-Production 
-
-`https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
-
-Stage 
+An example Integration URL looks like:
 
 `https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
 
 ### <a name="data-structure"></a> Data Structure
 
-JSON data encoded in IntegrationURL should have the following structure:
+The URLGenerator expects you to pass the following data:
 
 ```php
-[
-  "user" => [ ... ] // (required) Agent information. Used to log in and create account if needed.
-  "application" => [ ... ] // (optional) Advance Application info. Used to create an Advance Application if present.
-  "documents" => [ ... ]  // (optional) Used to upload the documents for Advance Application if present.
-]
+$urlgenerator->setUser([...]);
+$urlgenerator->setApplication([...]);
+$urlgenerator->setDocuments([...]);
 ```
 
 Please refer to the specific sections to get more detail: 
@@ -94,40 +76,52 @@ Please refer to the specific sections to get more detail:
 * [application](#aa-required-data)
 * [documents](#document-upload)
 
-
 ### Credentials Explained
 
 In order to generate Integration URLs you will need to get the following credentials:
 
-- *relativeUrl* - used as a part of IntegrationURL. Can be changed by Payfully Admin by your request.
-- *aesKey* - AES Key used to encrypt the data.
-Please immediately contact Payfully Admin in case it gets exposed/compromised.
-Admin will rotate it and provide you with the new key.
+- *relativeUrl*: Provided by us.
+- *aesKey* - AES Key used to encrypt the data. Also, provided by us.
 
-Please contact Payfully Administrator to get them.
+Please contact immediately a Payfully Admin in case it gets exposed/compromised. The Admin will rotate it and provide you with the new key.
 
-### Generating Integration URLs
+### <a name="api-link-generation-php"></a> Generating an Integration URL
 
-There are 3 ways to generate Integration URLs.
-In all cases you will need to have `relativeUrl` and `aesKey`.
-
-#### <a name="api-link-generation-php"></a> Generate Integration URL with our PHP library
-
-To generate the Integration URL using the PHP library:
+Instructions:
 1. Add the library to composer.
-2. Form PHP array containing the required [data](#data-structure)
-2. Instance the library object, and set the relativeUrl, aesKey and test values inside the constructor. 
-2. Set the Data to each section.
-4. Call the method `generate()`
-
-Add the Payfully library to your composer file.
-
 ```
 composer require payfully/integrator
 ```
+2. Instantiate the library object, and set the `relativeUrl`, `aesKey` and `Env` values inside the constructor. 
+```php
+require __DIR__ . '/vendor/autoload.php';
 
-Here is an example:
+use Payfully\Integrator\UrlGenerator;
+use Payfully\Integrator\Env;
 
+$relativeUrl = 'SuperAgency';
+$aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
+$urlgenerator = new UrlGenerator($relativeUrl, $aesKey, Env::Stage);
+```
+**NOTE: The possible environment values are:**
+- `Env::Stage`
+- `Env::Production`
+
+*If no environment is set, then we assume it's `production`*
+
+3. Form a PHP array containing the required [data](#data-structure) and set the Data to each section.
+```php
+$urlgenerator->setUser([...]);
+$urlgenerator->setApplication([...]);
+$urlgenerator->setDocuments([...]);
+```
+
+4. Finally call the method `generate()`
+```php
+echo $urlgenerator->generate();
+```
+
+Here is the full example:
 ```php
 
 require __DIR__ . '/vendor/autoload.php';
@@ -137,7 +131,6 @@ use Payfully\Integrator\Env;
 
 $relativeUrl = 'SuperAgency';
 $aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
-$test = true;
 $urlgenerator = new UrlGenerator($relativeUrl, $aesKey, Env::Stage);
 $urlgenerator->setUser([...]);
 $urlgenerator->setApplication([...]);
@@ -147,24 +140,13 @@ echo $urlgenerator->generate();
 ```
 
 The code above outputs:
-
-If you provide `Env::Production` you will get the production url.
-
-```text
-
-https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
-
-```
-
-If you provide `Env::Stage` you will get the stage url.
-
 ```text
 
 https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 
 ```
 
-Tested with PHP v7.1
+**NOTE: Tested with PHP v7.1**
 
 #### <a name="generate-integration-url-with-our-post-api"></a> Generate Integration URL with our POST API
 
