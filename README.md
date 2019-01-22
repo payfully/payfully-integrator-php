@@ -9,7 +9,7 @@
     + [Generating Integration URLs](#api-link-generation-php)
   * [Creating User Data](#user-required-data)
   * [Creating Advance Applications](#aa-required-data)
-  * [Attaching Documents to an Advance Application](#-document-upload)
+  * [Attaching Documents to an Advance Application](#document-upload)
 
 ## Introduction
 
