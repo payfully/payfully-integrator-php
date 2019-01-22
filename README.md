@@ -118,7 +118,6 @@ echo $urlgenerator->generate();
 
 Here is the full example:
 ```php
-
 require __DIR__ . '/vendor/autoload.php';
 
 use Payfully\Integrator\UrlGenerator;
