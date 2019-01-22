@@ -54,8 +54,8 @@ The generated Integration URL looks like:
 
 `https://<environment>.payfully.co/integrations/[relativeUrl]/[encodedData]`
 
-- *relativeUrl*: Is the one provided by us for your specific Environment.
-- *encodedData*: Is the **JSON data** that is first **AES Encrypted** and then **Base64 encoded**.
+- `**relativeUrl**`: It's the one provided by us for your specific Environment.
+- `**encodedData**`: It's the **JSON data** that is first **AES Encrypted** and then **Base64 encoded**.
 
 An example Integration URL looks like:
 
