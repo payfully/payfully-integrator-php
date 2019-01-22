@@ -16,8 +16,8 @@ class UrlGenerator
     public $application = false;
     public $documents = false;
 
-    const PAYFULLY_URL_PROD = 'https://www.payfully.co';
-    const PAYFULLY_URL_STAGE = 'https://stage.payfully.co';
+    const PAYFULLY_URL_PROD = 'https://integration.payfully.co';
+    const PAYFULLY_URL_STAGE = 'https://integration-stage.payfully.co';
     const PHONE_NUMBER_REGION = 'US';
     /**
      * @param type $relativeUrl

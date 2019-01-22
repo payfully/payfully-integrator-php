@@ -48,9 +48,9 @@ As following the Integration URL allows logging into Payfully account.
 
 The Integration URL looks as follows:
 `Production`
-`https://www.payfully.co/integrations/[relativeUrl]/[encodedData]`
+`https://integration.payfully.co/integrations/[relativeUrl]/[encodedData]`
 `Stage`
-`https://stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
+`https://integration-stage.payfully.co/integrations/[relativeUrl]/[encodedData]`
 - *relativeUrl* - is going to be provided by Payfully Admin.
 
 - *encodedData* - is a **JSON data** that is first **AES Encrypted** and then **base64 encoded**.
@@ -59,8 +59,8 @@ This data should contain agent information + optionally data for the Advance App
 The exact [data structure](#data-structure) and [encryption/encoding](#api-link-generation) are covered in the following sections.
 
 The example of an Integration URL:
-`https://wwww.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
-`https://stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
+`https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
+`https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMTlDSlo0Uk16TjJKOFZNZU4rcmc3VWNobUVXMjNtQzQ4ST0=`
 
 ### <a name="data-structure"></a> Data Structure
 
@@ -126,17 +126,17 @@ The code above outputs:
 ```text
 Production 
 
-https://wwww.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
+https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 
 Stage
 
-https://stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
+https://integration-stage.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 
 ```
 
 Tested with PHP v7.1
 
-####<a name="generate-integration-url-with-our-post-api"></a> Generate Integration URL with our POST API
+#### <a name="generate-integration-url-with-our-post-api"></a> Generate Integration URL with our POST API
 
 We provide a POST API for easy Integration URL generation.
 
@@ -157,7 +157,7 @@ The `data` should be a JSON document of the [structure](#data-structure) describ
 
 The example response body:
 ```json
-{"url":"https://www.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMStyeERjb1FvMmEwdFhPblhJT2xQMnRyelVkUXFUTXZtVT0="}
+{"url":"https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMStyeERjb1FvMmEwdFhPblhJT2xQMnRyelVkUXFUTXZtVT0="}
 ```
 
 #### <a name="api-link-generation-manually"></a>Generate Integration URL Manually
@@ -166,8 +166,8 @@ To generate the Integration URL manually you need to:
 1. Form a PHP array containing the required [data](#data-structure)
 2. **AES Encrypt** the string using your aesKey
 3. **base64** encode the result
-4. Concat base URL (https://www.payfully.co/integrations/), relativeUrl and the encodedData the following way:
-`https://www.payfully.co/integrations/[relativeUrl]/[encodedData]`
+4. Concat base URL (https://integration.payfully.co/integrations/), relativeUrl and the encodedData the following way:
+`https://integration.payfully.co/integrations/[relativeUrl]/[encodedData]`
 
 Here is an example written in PHP:
 
@@ -187,7 +187,7 @@ function generateIntegrationURL($data, $relativeUrl, $aesKey)
   unset($encryptedString, $iv, $salt);
   $dataEncoded = base64_encode(json_encode($output));
 
-  return  "https://www.payfully.co/integrations/".$relativeUrl."/".$dataEncoded;
+  return  "https://integration.payfully.co/integrations/".$relativeUrl."/".$dataEncoded;
 }
 $relativeUrl = 'SuperAgency';
 $aesKey = "Qkoghsks1Oe3V+/s+wtV6b1FFmM+YdQCg0mGPTiO3xofssrcsgR6yA3rvsSIyq/85DiHm/7BIbrEg1GOL1soag==";
@@ -207,7 +207,7 @@ echo $url;
 
 The code above outputs:
 ```text
-https://www.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
+https://integration.payfully.co/integrations/SuperAgency/VTJGc2RHVmtYMS9EY0FEdnJ0MFdhSkJqdGlIYXB1ZVF5cWE2VkpYSXhiTT0=
 ```
 
 Tested with PHP v7.1
