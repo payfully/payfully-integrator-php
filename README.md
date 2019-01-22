@@ -1,15 +1,14 @@
 # Payfully Integrator PHP
 
-- [Payfully Integration Guide](#payfully-integration-guide)
-  * [Introduction](#introduction)
-    + [How it works](#how-it-works)
-  * [Integration Links](#integration-links)
-    + [Data Structure](#-data-structure)
-    + [Credentials Explained](#credentials-explained)
-    + [Generating Integration URLs](#api-link-generation-php)
-  * [Creating User Data](#user-required-data)
-  * [Creating Advance Applications](#aa-required-data)
-  * [Attaching Documents to an Advance Application](#document-upload)
+ - [Introduction](#introduction)
+   + [How it works](#how-it-works)
+ - [Integration Links](#integration-links)
+   + [Data Structure](#-data-structure)
+   + [Credentials Explained](#credentials-explained)
+   + [Generating Integration URLs](#api-link-generation-php)
+ - [Creating User Data](#user-required-data)
+ - [Creating Advance Applications](#aa-required-data)
+ - [Attaching Documents to an Advance Application](#document-upload)
 
 ## Introduction
 
