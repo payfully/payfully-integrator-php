@@ -177,7 +177,12 @@ class UrlGenerator
         'data' => [
         'represents'=> [
           'required' => false,
-          'type' => 'string'
+          'type' => 'dropdown',
+          'data' => [
+            'Listing',
+            'Buying',
+            'Both'
+          ]
         ],
         'completedTransactions'=> [
           'required' => false,
@@ -297,6 +302,11 @@ class UrlGenerator
         if (!$isValid) {
             throw new Exception("Value '$value' for '$field' is not a valid phone number");
         }
+      break;
+      case 'dropdown':
+          if (!in_array($value, $validations['data'])) {
+              throw new Exception("Value '$value' should be 'Listing','Buying','Both'");
+          }
       break;
       case 'numeric':
         if (!is_numeric($value)) {

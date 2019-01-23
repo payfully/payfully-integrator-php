@@ -8,8 +8,8 @@ use Payfully\Integrator\Env;
 
 $urlgenerator = new UrlGenerator("payfully_test", 'Ot9NTFP2ylGLnipUhkXSlEPpddlEY9HrBDF6veE7dqhgkqZ40UaLDxRo2S/F9+R5tBFFsso9RENCMrh11Dbl7g==', Env::Stage);
 $urlgenerator->setUser([
-    'email'=> 'test@duvan.com',
-    'fullName'=> 'test@duvan.com',
+    'email'=> 'test@duvan3.com',
+    'fullName'=> 'test@duvan3.com',
     'phone'=> '6466666666'
 ]);
 $datetime = new DateTime('2010-12-30 23:21:46');
@@ -25,10 +25,10 @@ $urlgenerator->setApplication([
     'isShortSale'=> true,
     'ratificationDate'=> $datetime,
     'closingDate'=> $datetime,
-    'mlsId'=> 'test'
+    'mlsId'=> 'test3'
   ],
   'agentInformation'=> [
-    'represents'=> '123',
+    'represents'=> 'Both',
     'completedTransactions'=> '345',
     'pendingContracts'=> 123,
     'activeListings'=> 3455,
@@ -36,15 +36,15 @@ $urlgenerator->setApplication([
   ]
 ]);
 
-// $urlgenerator->setDocuments([
-//   [
-//     'type'=> 'contract',
-//     'url'=> 'https://google.com'
-//   ],
-//   [
-//     'type'=> 'idDocuments',
-//     'url'=> 'https://google.com'
-//   ]
-// ]);
+$urlgenerator->setDocuments([
+  [
+    'type'=> 'contract',
+    'url'=> 'https://google.com'
+  ],
+  [
+    'type'=> 'idDocuments',
+    'url'=> 'https://google.com'
+  ]
+]);
 
 echo $urlgenerator->generate();

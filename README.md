@@ -184,9 +184,6 @@ $application = [
     'completedTransactions' => ..., // (optional) [number] - Completed transactions by the agent in the last 6 months
     'pendingContracts' => ..., // (optional) [number] - Number of Agent's pending contracts at the moment
     'activeListings' => ..., // (optional) [number] - Number of Agent's active listings at the moment
-    'fullName' => "...", // (optional) [string] - Full name of the agent
-    'email' => "...", // (optional) [string] - Agent's email address
-    'phoneNumber' => "...", // (optional) [string] - Agent's phone number
     'licenseNumber' => "..." // (optional) [string] - Agent's license number
   ]
 ];
