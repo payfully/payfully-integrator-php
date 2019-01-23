@@ -113,7 +113,7 @@ class UrlGenerator
 
         foreach ($this->user as $key => $property) {
             if (key_exists($key, $fields)) {
-                $this->validateType($fields[$key]['type'], $property, $key);
+                $this->validateType($fields[$key], $property, $key);
             } else {
                 unset($this->user[$key]);
             }
@@ -134,7 +134,8 @@ class UrlGenerator
       ],
       'shareOfCommission'=> [
         'required' => false,
-        'type' => 'numeric'
+        'type' => 'numeric',
+         'min' => 1250
       ],
       'dealInformation'=> [
         'required' => false,
@@ -221,13 +222,13 @@ class UrlGenerator
                         }
                         foreach ($property as $keyInter => $propertyInter) {
                             if (key_exists($keyInter, $fields[$key]['data'])) {
-                                $this->validateType($fields[$key]['data'][$keyInter]['type'], $propertyInter, $keyInter);
+                                $this->validateType($fields[$key]['data'][$keyInter], $propertyInter, $keyInter);
                             } else {
                                 unset($this->application[$key][$keyInter]);
                             }
                         }
                     } else {
-                        $this->validateType($fields[$key]['type'], $property, $key);
+                        $this->validateType($fields[$key], $property, $key);
                     }
                 } else {
                     unset($this->application[$key]);
@@ -255,15 +256,15 @@ class UrlGenerator
                 $this->setDocuments(false);
             } else {
                 foreach ($this->documents as $key => $document) {
-                    $this->validateType($fields['type']['type'], $document['type'], $key);
-                    $this->validateType($fields['url']['type'], $document['url'], $key);
+                    $this->validateType($fields['type'], $document['type'], $key);
+                    $this->validateType($fields['url'], $document['url'], $key);
                 }
             }
         }
     }
-    public function validateType($type, $value, $field)
+    public function validateType($validations, $value, $field)
     {
-        switch ($type) {
+        switch ($validations['type']) {
       case 'email':
         if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
             return true;
@@ -300,6 +301,9 @@ class UrlGenerator
       case 'numeric':
         if (!is_numeric($value)) {
             throw new Exception("Value '$value' for '$field' is not numeric");
+        }
+        if (array_key_exists('min', $validations) && $value < $validations['min']) {
+            throw new Exception("Value '$value' should be more than ".$validations['min']);
         }
       break;
       case 'document':
